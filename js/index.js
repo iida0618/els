@@ -31,7 +31,14 @@ function showQuestion() {
     let answer = '';
     for (h = 0; h < questionlist.length; h++) {
         for (i = 1; i < 5; i++) {
-            answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer" value="a">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
+            // 正解の選択肢
+            if (questionlist[h]['正答'] == i) {
+                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer" value="TRUE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
+            }
+            // 不正解の選択肢
+            else {
+                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer" value="FALSE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
+            }
         }
         document.getElementById('form-' + questionlist[h]['ID']).innerHTML = answer;
         answer = '';

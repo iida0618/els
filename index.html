@@ -12,20 +12,25 @@
     <a href="./select.html">
         <h1>　</h1>
     </a>
-    <div id="question"></div>
+    <div class="question" id="question"></div>
+
+    <div class="question">
+        <button>回答を送信</button>
+    </div>
 
     <form id="myForm">
+        <!-- name属性の値が送信時のクエリパラメータ(シートの列名) -->
         <label for="name">名前:</label>
         <input type="text" id="name" name="name"><br>
-        
+
         <label for="email">メールアドレス:</label>
         <input type="email" id="email" name="email"><br>
-        
+
         <label for="message">メッセージ:</label>
         <textarea id="message" name="message"></textarea><br>
-        
+
         <button type="button" onclick="submitForm()">送信</button>
-      </form>
+    </form>
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
