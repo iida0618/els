@@ -32,7 +32,7 @@ form div {
 }
 
 input[type="radio"] {
-    margin: 0.1vw;
+    margin: 0.5vw;
     cursor: pointer;
 }
 
@@ -41,7 +41,7 @@ label {
     align-items: center;
     padding: 0.5vw;
     cursor: pointer;
-    width: 19vw;
+    width: 20vw;
 }
 
 .title {
@@ -55,10 +55,12 @@ label {
 
 .answerform {
     background-color:lightgrey;
+    word-break: break-all;
+
 }
 
 #question {
-    max-width: 90vw;
+    max-width: fit-content;
     margin-left: auto;
     margin-right: auto;
 }
