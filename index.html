@@ -13,6 +13,19 @@
         <h1>　</h1>
     </a>
     <div id="question"></div>
+
+    <form id="myForm">
+        <label for="name">名前:</label>
+        <input type="text" id="name" name="name"><br>
+        
+        <label for="email">メールアドレス:</label>
+        <input type="email" id="email" name="email"><br>
+        
+        <label for="message">メッセージ:</label>
+        <textarea id="message" name="message"></textarea><br>
+        
+        <button type="button" onclick="submitForm()">送信</button>
+      </form>
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="

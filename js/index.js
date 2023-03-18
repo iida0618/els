@@ -1,6 +1,6 @@
 let jsonArray;
 
-fetch("https://script.google.com/macros/s/AKfycbzb3i74-aXNkA3nt2_yMz38IUCMFze1kSGL201XMQHBpMi1gJpvpilEVpRtRxtw-nti/exec")
+fetch("https://script.google.com/macros/s/AKfycbwMawaYPz9VFZs1wna-9EE5N5FNGgccBJeXWiGXaC5i4wbYrWgubuPCTiE5zLnhufxj/exec")
     .then(response => response.json())
     .then(data => {
         // 各シート名とデータが含まれるオブジェクトを処理する
@@ -29,16 +29,35 @@ function showQuestion() {
     }
 
     let answer = '';
-
-
     for (h = 0; h < questionlist.length; h++) {
-        for(i = 1; i < 5; i++) {
-            answer +=  '<div class="answerform"><label for="answer'+ questionlist[h]['ID'] +'-'+ Number(i) +'"><input type="radio" id="answer'+ questionlist[h]['ID'] +'-'+ Number(i) +'" name="answer" value="a">'+ questionlist[h]['選択肢'+Number(i)] +'</label></div>'
+        for (i = 1; i < 5; i++) {
+            answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer" value="a">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
         }
-        document.getElementById('form-'+questionlist[h]['ID']).innerHTML = answer;
+        document.getElementById('form-' + questionlist[h]['ID']).innerHTML = answer;
         answer = '';
     }
+}
 
+
+function submitForm() {
+    var form = document.getElementById("myForm");
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://script.google.com/macros/s/AKfycbwMawaYPz9VFZs1wna-9EE5N5FNGgccBJeXWiGXaC5i4wbYrWgubuPCTiE5zLnhufxj/exec");
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            alert("送信が完了しました。");
+            form.reset();
+        } else {
+            alert("エラーが発生しました。");
+        }
+    };
+    var formData = new FormData(form);
+    var data = [];
+    for (var [key, value] of formData.entries()) {
+        data.push(key + "=" + encodeURIComponent(value));
+    }
+    xhr.send(data.join("&"));
 }
 
 //クエリの取得
