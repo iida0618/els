@@ -1,6 +1,6 @@
 let jsonArray;
 
-fetch("https://script.google.com/macros/s/AKfycbwHAHfO6_D_lfYrLhtWZLs7qsHs88Wi582EwVuq1F1sKwzQMFvpWZyoxkkdJizRcvzA/exec")
+fetch("https://script.google.com/macros/s/AKfycbxdi5EcL7Z6BfvQZ8jE85qhdUDjQaE6Wi74v8WhhPmfFfoAdQ5yzBe68fKmVPtWjXm8/exec")
     .then(response => response.json())
     .then(data => {
         // 各シート名とデータが含まれるオブジェクトを処理する
@@ -53,15 +53,18 @@ function submitForm() {
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
+    let url = "https://script.google.com/macros/s/AKfycbxdi5EcL7Z6BfvQZ8jE85qhdUDjQaE6Wi74v8WhhPmfFfoAdQ5yzBe68fKmVPtWjXm8/exec";
+
     for (h = 0; h < questionlist.length; h++) {
         let form = document.getElementById("form-" + questionlist[h]['ID']);
         let formData = new FormData(form);
 
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", "https://script.google.com/macros/s/AKfycbwHAHfO6_D_lfYrLhtWZLs7qsHs88Wi582EwVuq1F1sKwzQMFvpWZyoxkkdJizRcvzA/exec");
+        xhr.open("POST", url);
         xhr.send(formData);
 
-        $("input:radio[name=answer" + questionlist[h]['ID'] + "]:checked").checked = false;
+        // $("input:radio[name=answer" + questionlist[h]['ID'] + "]:checked").checked = false;
+        console.log('done')
     }
 
     var radios = document.getElementsByTagName('input');
