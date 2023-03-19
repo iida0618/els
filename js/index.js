@@ -1,6 +1,6 @@
 let jsonArray;
 
-fetch("https://script.google.com/macros/s/AKfycbzmlrkPAu-n3oTHlCzdamehUPrZ2pguJUsfFFC_-Tx5boqEgAYgR7lKsHsp_RN0j4P8/exec")
+fetch("https://script.google.com/macros/s/AKfycbwsSjWf69YV0L_adEQQE6Zje2lleHN6ACKPI1QSM0wyvg78Pomf8Nsg2gTxRYz1yKOd/exec")
     .then(response => response.json())
     .then(data => {
         // 各シート名とデータが含まれるオブジェクトを処理する
@@ -71,14 +71,46 @@ function showQuestion() {
 //     }
 // }
 
-function submitResult() {
+function submitForm() {
+    event.preventDefault(); // デフォルトの送信処理を防止
     let questiontype = getParam('type');
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
     for (h = 0; h < questionlist.length; h++) {
-        let form = document.getElementById("form-" + questionlist[h]['ID']);
-        return submitForm(form);
+        var form = document.getElementById("form-" + questionlist[h]['ID']);
+        var formData = new FormData(form);
+
+        var payload = {};
+
+        for (const [name, value] of formData) {
+            if (!payload[name]) {
+                payload[name] = value;
+            } else {
+                payload[name] += "&" + value;
+            }
+        }
+
+        var url = "https://script.google.com/macros/s/AKfycbwsSjWf69YV0L_adEQQE6Zje2lleHN6ACKPI1QSM0wyvg78Pomf8Nsg2gTxRYz1yKOd/exec";
+        var options = {
+            method: "post",
+            payload: payload
+        };
+
+        var xhr = new XMLHttpRequest();
+        xhr.open(options.method, url);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log(xhr.responseText);
+            }
+        };
+        var encodedData = Object.keys(options.payload).map(function (k) {
+            return encodeURIComponent(k) + "=" + encodeURIComponent(options.payload[k]);
+        }).join("&");
+        xhr.send(encodedData);
+
+        $("input:radio[name=answer" + questionlist[h]['ID'] + "]:checked").checked = false;
     }
 
     var radios = document.getElementsByTagName('input');
@@ -87,43 +119,6 @@ function submitResult() {
             radios[i].checked = false;
         }
     }
-}
-
-
-function submitForm(a) {
-    event.preventDefault(); // デフォルトの送信処理を防止
-
-    var form = a;
-    var formData = new FormData(form);
-
-    var payload = {};
-
-    for (const [name, value] of formData) {
-        if (!payload[name]) {
-            payload[name] = value;
-        } else {
-            payload[name] += "&" + value;
-        }
-    }
-
-    var url = "https://script.google.com/macros/s/AKfycbzmlrkPAu-n3oTHlCzdamehUPrZ2pguJUsfFFC_-Tx5boqEgAYgR7lKsHsp_RN0j4P8/exec";
-    var options = {
-        method: "post",
-        payload: payload
-    };
-
-    var xhr = new XMLHttpRequest();
-    xhr.open(options.method, url);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
-        }
-    };
-    var encodedData = Object.keys(options.payload).map(function (k) {
-        return encodeURIComponent(k) + "=" + encodeURIComponent(options.payload[k]);
-    }).join("&");
-    xhr.send(encodedData);
 }
 
 //クエリの取得
