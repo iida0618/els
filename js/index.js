@@ -1,6 +1,6 @@
 let jsonArray;
 
-fetch("https://script.google.com/macros/s/AKfycbwMawaYPz9VFZs1wna-9EE5N5FNGgccBJeXWiGXaC5i4wbYrWgubuPCTiE5zLnhufxj/exec")
+fetch("https://script.google.com/macros/s/AKfycbxZWn3KevKdBOh3-dRfRd2hdmj3pRafkwyjeTdS9TKED9uOX2RqdpWhsUpKVeo0UkNA/exec")
     .then(response => response.json())
     .then(data => {
         // 各シート名とデータが含まれるオブジェクトを処理する
@@ -20,7 +20,7 @@ function showQuestion() {
     for (h = 0; h < questionlist.length; h++) {
         questiontitle += '<div class="questionarea" id="' + questionlist[h]['ID'] + '"><div class="title" >' + questionlist[h]['問題文'] + '</div></div>'
     }
-    document.getElementById('question').innerHTML = questiontitle;
+    document.getElementById('myForm').innerHTML = questiontitle;
 
     let form = '';
     for (h = 0; h < questionlist.length; h++) {
@@ -33,11 +33,11 @@ function showQuestion() {
         for (i = 1; i < 5; i++) {
             // 正解の選択肢
             if (questionlist[h]['正答'] == i) {
-                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer" value="TRUE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
+                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="ID=' + questionlist[h]['ID'] + '&category=' + questionlist[h]['category'] + '&type=' + questionlist[h]['type'] + '&level=' + questionlist[h]['level'] + '&結果=TRUE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
             }
             // 不正解の選択肢
             else {
-                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer" value="FALSE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
+                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="ID=' + questionlist[h]['ID'] + '&category=' + questionlist[h]['category'] + '&type=' + questionlist[h]['type'] + '&level=' + questionlist[h]['level'] + '&結果=FALSE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
             }
         }
         document.getElementById('form-' + questionlist[h]['ID']).innerHTML = answer;
@@ -45,26 +45,23 @@ function showQuestion() {
     }
 }
 
+var questionarea = $(".questionarea").length;
+
 
 function submitForm() {
-    var form = document.getElementById("myForm");
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://script.google.com/macros/s/AKfycbwMawaYPz9VFZs1wna-9EE5N5FNGgccBJeXWiGXaC5i4wbYrWgubuPCTiE5zLnhufxj/exec");
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            alert("送信が完了しました。");
-            form.reset();
-        } else {
-            alert("エラーが発生しました。");
-        }
-    };
-    var formData = new FormData(form);
-    var data = [];
-    for (var [key, value] of formData.entries()) {
-        data.push(key + "=" + encodeURIComponent(value));
+    let questiontype = getParam('type');
+    let questionlist = jsonArray[questiontype];
+    console.log(questionlist);
+
+    var form = ''
+    for (h = 0; h < questionlist.length; h++) {
+        form = document.getElementById("form-" + questionlist[h]['ID']);
+        var formData = new FormData(form);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://script.google.com/macros/s/AKfycbxZWn3KevKdBOh3-dRfRd2hdmj3pRafkwyjeTdS9TKED9uOX2RqdpWhsUpKVeo0UkNA/exec");
+        xhr.send(formData);
     }
-    xhr.send(data.join("&"));
 }
 
 //クエリの取得

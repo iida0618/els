@@ -49,13 +49,15 @@ label {
 }
 
 .questionarea {
-    background-color:azure;
+    background-color:rgb(231, 229, 229);
     margin-bottom: 1vw;
+    padding: 0.5vw;
 }
 
 .answerform {
-    background-color:lightgrey;
+    background-color:lightcyan;
     word-break: break-all;
+    border-radius: 10px;
 
 }
 
