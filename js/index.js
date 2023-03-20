@@ -1,6 +1,9 @@
 let jsonArray;
+const currentUrl = location.href;
+console.log(currentUrl);
+let url = "https://script.google.com/macros/s/AKfycbxfPrC7h7tiEM072SUupcMmGYMjxbDJLr6W9qMjq3P708Z9lpxVzNdaqidJt-McUPYA/exec";
 
-fetch("https://script.google.com/macros/s/AKfycbxdi5EcL7Z6BfvQZ8jE85qhdUDjQaE6Wi74v8WhhPmfFfoAdQ5yzBe68fKmVPtWjXm8/exec")
+fetch(url)
     .then(response => response.json())
     .then(data => {
         // 各シート名とデータが含まれるオブジェクトを処理する
@@ -48,30 +51,40 @@ function showQuestion() {
 var questionarea = $(".questionarea").length;
 
 
+
+
 function submitForm() {
     let questiontype = getParam('type');
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
-    let url = "https://script.google.com/macros/s/AKfycbxdi5EcL7Z6BfvQZ8jE85qhdUDjQaE6Wi74v8WhhPmfFfoAdQ5yzBe68fKmVPtWjXm8/exec";
+    let form = '';
+    let formData = '';
+    let xhr = '';
 
     for (h = 0; h < questionlist.length; h++) {
-        let form = document.getElementById("form-" + questionlist[h]['ID']);
+        form = document.getElementById("form-" + questionlist[h]['ID']);
 
         for (var i = 0; i < form.length; i++) {
             if (form[i].checked == true) {
-                console.log(form);
-                let formData = new FormData(form);
+                formData = new FormData(form);
 
-                let xhr = new XMLHttpRequest();
-
+                xhr = new XMLHttpRequest();
                 xhr.open("POST", url);
                 xhr.send(formData);
-
-                console.log('done')
+                console.log('done');
+                // 現在のURLを https://example.com/new/path に書き換え、かつページを再ロードせずに移動する
+                history.pushState(null, null, currentUrl);
+            } else {
+                // 現在のURLを https://example.com/new/path に書き換え、かつページを再ロードせずに移動する
+                history.pushState(null, null, currentUrl);
             }
         }
+        // 現在のURLを https://example.com/new/path に書き換え、かつページを再ロードせずに移動する
+        history.pushState(null, null, currentUrl);
+
     }
+
 
     var radios = document.getElementsByTagName('input');
     for (var i = 0; i < radios.length; i++) {
