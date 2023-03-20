@@ -57,14 +57,20 @@ function submitForm() {
 
     for (h = 0; h < questionlist.length; h++) {
         let form = document.getElementById("form-" + questionlist[h]['ID']);
-        let formData = new FormData(form);
 
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", url);
-        xhr.send(formData);
+        for (var i = 0; i < form.length; i++) {
+            if (form[i].checked == true) {
+                console.log(form);
+                let formData = new FormData(form);
 
-        // $("input:radio[name=answer" + questionlist[h]['ID'] + "]:checked").checked = false;
-        console.log('done')
+                let xhr = new XMLHttpRequest();
+
+                xhr.open("POST", url);
+                xhr.send(formData);
+
+                console.log('done')
+            }
+        }
     }
 
     var radios = document.getElementsByTagName('input');
