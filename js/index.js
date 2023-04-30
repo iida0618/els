@@ -1,7 +1,7 @@
 let jsonArray;
 const currentUrl = location.href;
 console.log(currentUrl);
-let url = "https://script.google.com/macros/s/AKfycbxfPrC7h7tiEM072SUupcMmGYMjxbDJLr6W9qMjq3P708Z9lpxVzNdaqidJt-McUPYA/exec";
+let url = "https://script.google.com/macros/s/AKfycbw3nGs_X5Zvuy1voLOXy-q8c-B_1LV84WKhZFcokqof_PHtQDnzfAbYybmLnqQJlPVC/exec";
 
 fetch(url)
     .then(response => response.json())
@@ -35,7 +35,8 @@ function showQuestion() {
     for (h = 0; h < questionlist.length; h++) {
         for (i = 1; i < 5; i++) {
             // 正解の選択肢
-            if (questionlist[h]['正答'] == i) {
+            if (questionlist[h]['正答'] == questionlist[h]['選択肢'+Number(i)]) {
+                console.log(questionlist[h]['選択肢'+Number(i)]);
                 answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="ID=' + questionlist[h]['ID'] + '&category=' + questionlist[h]['category'] + '&type=' + questionlist[h]['type'] + '&level=' + questionlist[h]['level'] + '&結果=TRUE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
             }
             // 不正解の選択肢
@@ -70,7 +71,7 @@ function submitForm() {
                 formData = new FormData(form);
 
                 xhr = new XMLHttpRequest();
-                xhr.open("POST", url);
+                xhr.open("POST", "https://script.google.com/macros/s/AKfycbzBhgXltbUsbcZ98yMvQk2AmM5Qc0xZZhePDyJrx_Zew-3FeMKGEKITjbc0ECLWe6rZ/exec");
                 xhr.send(formData);
                 console.log('done');
                 // 現在のURLを https://example.com/new/path に書き換え、かつページを再ロードせずに移動する
