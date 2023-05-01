@@ -55,6 +55,45 @@ var questionarea = $(".questionarea").length;
 
 
 function submitForm() {
+
+
+    // const data = [];
+    // const forms = document.querySelectorAll("form");
+
+    // forms.forEach((form) => {
+    //     const formData = new FormData(form);
+    //     const entries = formData.entries();
+
+    //     const checked = [];
+    //     for (let pair of entries) {
+    //         if (pair[1] === "TRUE") {
+    //             const [key, value] = pair[0].split("=");
+    //             checked.push({
+    //                 [key]: value
+    //             });
+    //         }
+    //     }
+    //     data.push(checked);
+    // });
+
+    // const url = "https://script.google.com/macros/s/AKfycbxrdega3vG9SKmIz-udWA58jEP47R8iCjPw_IhbzRD010OGDINBTzy6GMcTqoEwVf4s/exec";
+    // const options = {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //         'Access-Control-Allow-Origin': '*'
+    //     },
+    //     body: JSON.stringify(data),
+    // };
+
+    // fetch(url, options)
+    //     .then((response) => console.log(response))
+    //     .catch((error) => console.log(error));
+
+
+
+    // console.log("発動した")
+
     let questiontype = getParam('type');
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
@@ -87,7 +126,7 @@ function submitForm() {
                 console.log(formData);
 
                 xhr = new XMLHttpRequest();
-                xhr.open("POST", "https://script.google.com/macros/s/AKfycbzBhgXltbUsbcZ98yMvQk2AmM5Qc0xZZhePDyJrx_Zew-3FeMKGEKITjbc0ECLWe6rZ/exec");
+                xhr.open("POST", "https://script.google.com/macros/s/AKfycbyqmkIgpyD42a68H-qqytIt1E_HOQuV6NicDBMJl8uflJzjsBD06OkCoGPwtWBTScwX/exec");
                 xhr.send(formData);
                 console.log('done');
                 // 現在のURLを https://example.com/new/path に書き換え、かつページを再ロードせずに移動する
