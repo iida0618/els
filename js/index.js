@@ -37,11 +37,11 @@ function showQuestion() {
             // 正解の選択肢
             if (questionlist[h]['正答'] == questionlist[h]['選択肢' + Number(i)]) {
                 console.log(questionlist[h]['選択肢' + Number(i)]);
-                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="ID=' + questionlist[h]['ID'] + '&category=' + questionlist[h]['category'] + '&type=' + questionlist[h]['type'] + '&level=' + questionlist[h]['level'] + '&結果=TRUE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
+                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="TRUE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
             }
             // 不正解の選択肢
             else {
-                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="ID=' + questionlist[h]['ID'] + '&category=' + questionlist[h]['category'] + '&type=' + questionlist[h]['type'] + '&level=' + questionlist[h]['level'] + '&結果=FALSE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
+                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="FALSE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
             }
         }
         document.getElementById('form-' + questionlist[h]['ID']).innerHTML = answer;
@@ -64,21 +64,36 @@ function submitForm() {
             return new Promise((resolve) => {
                 let form = document.getElementById("form-" + question['ID']);
                 let formData = new FormData(form);
+                console.log(questionlist[h]['ID']);
+
+                //formDataの追加
+                formData.append("ID", questionlist[h]['ID']);
+                formData.append("category", questionlist[h]['category']);
+                formData.append("type", questionlist[h]['type']);
+                formData.append("level", questionlist[h]['level']);
+                if (document.getElementById("form-" + question['ID']).value == "TRUE") {
+                    formData.append("結果", "TRUE");
+                } else {
+                    formData.append("結果", "FALSE");
+                }
+
                 let radios = form.querySelectorAll('input[type=radio]:checked');
 
                 if (radios.length > 0) {
                     radios.forEach((radio) => {
-                        formData.append(radio.name, radio.value + '&status=回答');
+                        formData.append(radio.name, radio.value);
+                        formData.append("status", "回答");
                         console.log("回答")
                     });
                 } else {
                     let radio = form.querySelector('input[type=radio]');
-                    formData.append(radio.name, radio.value + '&status=未回答');
+                    formData.append(radio.name, radio.value);
+                    formData.append("status", "未回答");
                 }
                 console.log(formData);
 
                 let xhr = new XMLHttpRequest();
-                xhr.open("POST", "https://script.google.com/macros/s/AKfycbwQI5G2DllBh6P0BzHNhPV0DPl5VxQPEueqmHfpRZ9N50Uqu33XaTtwpMxsxQXWQR4p/exec");
+                xhr.open("POST", "https://script.google.com/macros/s/AKfycbwR1WVzDccK4oteHfiRp1QDkQrTizCpGAR2cXsbdDufi6l3ZZ-btKdakuUTUTuuuGqF/exec");
                 xhr.send(formData);
                 console.log('done');
                 history.pushState(null, null, currentUrl);
