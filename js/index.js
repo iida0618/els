@@ -1,6 +1,9 @@
 let jsonArray;
 const currentUrl = location.href;
 console.log(currentUrl);
+if (getParam('type') == null || getParam('type') == "") {
+    window.location.href = '../select.html';
+}
 let url = "https://script.google.com/macros/s/AKfycbw3nGs_X5Zvuy1voLOXy-q8c-B_1LV84WKhZFcokqof_PHtQDnzfAbYybmLnqQJlPVC/exec";
 
 fetch(url)
@@ -121,6 +124,8 @@ function submitForm() {
                 radios[i].checked = false;
             }
         }
+        // window.location.href = '../select.html';
+        window.location.href = 'https://www.amazon.co.jp/';
     });
 }
 
