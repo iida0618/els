@@ -57,7 +57,7 @@ function submitForm() {
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
-    let delay = 700;
+    let delay = 600;
     let promise = Promise.resolve();
     questionlist.forEach((question, h) => {
         promise = promise.then(() => {
@@ -110,6 +110,58 @@ function submitForm() {
         }
     });
 }
+
+
+// ラジオボタンにチェック漏れがある場合にアラートを表示する(htmlのonclickをvalidateForm()に)
+function validateForm() {
+    // ラジオボタンの要素を取得する
+    let questiontype = getParam('type');
+    let questionlist = jsonArray[questiontype];
+    console.log(questionlist);
+
+    let hasUnchecked = false;
+    let checkedCount = 0;
+
+    for (let i = 0; i < questionlist.length; i++) {
+        const radios = document.getElementsByName("answer" + questionlist[i]['ID']);
+        let checked = false;
+
+        for (let j = 0; j < radios.length; j++) {
+            if (radios[j].checked) {
+                checkedCount++;
+                checked = true;
+                break;
+            }
+        }
+
+        if (!checked) {
+            hasUnchecked = true;
+            break;
+        }
+    }
+
+    if (hasUnchecked) {
+        if (confirm("未選択の項目がありますが、送信してもよろしいですか？")) {
+            // はいを選んだ場合
+            submitForm();
+            return true;
+        } else {
+            // いいえを選んだ場合
+            return false;
+        }
+    }
+
+    if (checkedCount === 0) {
+        alert("少なくとも1つの選択肢を選択してください。");
+        return false;
+    }
+
+    // 別の関数を実行する
+    submitForm();
+
+    return true;
+}
+
 
 
 
