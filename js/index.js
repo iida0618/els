@@ -52,13 +52,12 @@ function showQuestion() {
 var questionarea = $(".questionarea").length;
 
 
-
 function submitForm() {
     let questiontype = getParam('type');
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
-    let delay = 500;
+    let delay = 1000;
     let promise = Promise.resolve();
     questionlist.forEach((question, h) => {
         promise = promise.then(() => {
@@ -66,14 +65,23 @@ function submitForm() {
                 let form = document.getElementById("form-" + question['ID']);
                 let formData = new FormData(form);
                 let radios = form.querySelectorAll('input[type=radio]:checked');
+
                 if (radios.length > 0) {
-                    console.log(formData);
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("POST", "https://script.google.com/macros/s/AKfycbyqmkIgpyD42a68H-qqytIt1E_HOQuV6NicDBMJl8uflJzjsBD06OkCoGPwtWBTScwX/exec");
-                    xhr.send(formData);
-                    console.log('done');
-                    history.pushState(null, null, currentUrl);
+                    radios.forEach((radio) => {
+                        formData.append(radio.name, radio.value + '&status=回答');
+                        console.log("回答")
+                    });
+                } else {
+                    let radio = form.querySelector('input[type=radio]');
+                    formData.append(radio.name, radio.value + '&status=未回答');
                 }
+                console.log(formData);
+
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "https://script.google.com/macros/s/AKfycbwQI5G2DllBh6P0BzHNhPV0DPl5VxQPEueqmHfpRZ9N50Uqu33XaTtwpMxsxQXWQR4p/exec");
+                xhr.send(formData);
+                console.log('done');
+                history.pushState(null, null, currentUrl);
                 setTimeout(() => {
                     resolve();
                 }, delay);
@@ -92,63 +100,6 @@ function submitForm() {
 }
 
 
-
-// function submitForm() {
-//     let questiontype = getParam('type');
-//     let questionlist = jsonArray[questiontype];
-//     console.log(questionlist);
-
-//     let form = '';
-//     let formData = '';
-//     let xhr = '';
-//     let selectedform = [];
-//     for (h = 0; h < questionlist.length; h++) {
-//         form = document.getElementById("form-" + questionlist[h]['ID']);
-
-
-//         for (var i = 0; i < form.length; i++) {
-//             if (form[i].checked == true) {
-//                 selectedform.push([new FormData(form)]);
-//             }
-//         }
-//     }
-
-//     console.log(selectedform);
-
-
-
-//     for (h = 0; h < questionlist.length; h++) {
-//         form = document.getElementById("form-" + questionlist[h]['ID']);
-
-//         for (var i = 0; i < form.length; i++) {
-//             if (form[i].checked == true) {
-//                 formData = new FormData(form);
-//                 console.log(formData);
-
-//                 xhr = new XMLHttpRequest();
-//                 xhr.open("POST", "https://script.google.com/macros/s/AKfycbzBhgXltbUsbcZ98yMvQk2AmM5Qc0xZZhePDyJrx_Zew-3FeMKGEKITjbc0ECLWe6rZ/exec");
-//                 xhr.send(formData);
-//                 console.log('done');
-//                 // 現在のURLを https://example.com/new/path に書き換え、かつページを再ロードせずに移動する
-//                 history.pushState(null, null, currentUrl);
-//             } else {
-//                 // 現在のURLを https://example.com/new/path に書き換え、かつページを再ロードせずに移動する
-//                 history.pushState(null, null, currentUrl);
-//             }
-//         }
-//         // 現在のURLを https://example.com/new/path に書き換え、かつページを再ロードせずに移動する
-//         history.pushState(null, null, currentUrl);
-
-//     }
-
-
-//     var radios = document.getElementsByTagName('input');
-//     for (var i = 0; i < radios.length; i++) {
-//         if (radios[i].type === 'radio') {
-//             radios[i].checked = false;
-//         }
-//     }
-// }
 
 //クエリの取得
 /**
