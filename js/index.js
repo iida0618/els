@@ -57,7 +57,7 @@ function submitForm() {
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
-    let delay = 1000;
+    let delay = 700;
     let promise = Promise.resolve();
     questionlist.forEach((question, h) => {
         promise = promise.then(() => {
@@ -71,29 +71,26 @@ function submitForm() {
                 formData.append("category", questionlist[h]['category']);
                 formData.append("type", questionlist[h]['type']);
                 formData.append("level", questionlist[h]['level']);
-                if (document.getElementById("form-" + question['ID']).value == "TRUE") {
-                    formData.append("結果", "TRUE");
-                } else {
-                    formData.append("結果", "FALSE");
-                }
-
                 let radios = form.querySelectorAll('input[type=radio]:checked');
 
                 if (radios.length > 0) {
                     radios.forEach((radio) => {
                         formData.append(radio.name, radio.value);
+                        formData.append("結果", radio.value);
                         formData.append("status", "回答");
-                        console.log("回答")
+                        formData.append("selected", radio.labels[0].textContent);
                     });
                 } else {
                     let radio = form.querySelector('input[type=radio]');
                     formData.append(radio.name, radio.value);
+                    formData.append("結果", "FALSE");
                     formData.append("status", "未回答");
+                    formData.append("selected", "");
                 }
                 console.log(formData);
 
                 let xhr = new XMLHttpRequest();
-                xhr.open("POST", "https://script.google.com/macros/s/AKfycbwR1WVzDccK4oteHfiRp1QDkQrTizCpGAR2cXsbdDufi6l3ZZ-btKdakuUTUTuuuGqF/exec");
+                xhr.open("POST", "https://script.google.com/macros/s/AKfycbwLinwxXSe47kfLP35BFq4oSPlnXUyrIw7PM4K5c-nJxacP2NMTTt526aKZw7oTY4d1/exec");
                 xhr.send(formData);
                 console.log('done');
                 history.pushState(null, null, currentUrl);
@@ -113,6 +110,8 @@ function submitForm() {
         }
     });
 }
+
+
 
 
 
