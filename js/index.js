@@ -21,7 +21,7 @@ function showQuestion() {
 
     let questiontitle = '';
     for (h = 0; h < questionlist.length; h++) {
-        questiontitle += '<div class="questionarea" id="' + questionlist[h]['ID'] + '"><div class="title" >' + questionlist[h]['問題文'] + '</div></div>'
+        questiontitle += '<div class="questionarea" id="' + questionlist[h]['ID'] + '"><div class="title" >' + questionlist[h]['ID'] + '：' + questionlist[h]['問題文'] + '</div></div>'
     }
     document.getElementById('myForm').innerHTML = questiontitle;
 
@@ -52,12 +52,19 @@ function showQuestion() {
 var questionarea = $(".questionarea").length;
 
 
+
+
 function submitForm() {
+    // ロード画面を表示する要素のIDを取得
+    const loader = document.getElementById('loader');
+    // ロード画面を表示
+    loader.style.display = 'block';
+
     let questiontype = getParam('type');
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
-    let delay = 600;
+    let delay = 800;
     let promise = Promise.resolve();
     questionlist.forEach((question, h) => {
         promise = promise.then(() => {
@@ -71,6 +78,7 @@ function submitForm() {
                 formData.append("category", questionlist[h]['category']);
                 formData.append("type", questionlist[h]['type']);
                 formData.append("level", questionlist[h]['level']);
+
                 let radios = form.querySelectorAll('input[type=radio]:checked');
 
                 if (radios.length > 0) {
@@ -102,6 +110,11 @@ function submitForm() {
     });
 
     promise.then(() => {
+        // ロード画面を非表示にする
+        loader.style.display = 'none';
+        // アラートを出す
+        alert("回答の送信が完了しました！");
+        // 全てのラジオボタンの選択を解除
         var radios = document.getElementsByTagName('input');
         for (var i = 0; i < radios.length; i++) {
             if (radios[i].type === 'radio') {
@@ -112,7 +125,11 @@ function submitForm() {
 }
 
 
-// ラジオボタンにチェック漏れがある場合にアラートを表示する(htmlのonclickをvalidateForm()に)
+
+
+
+
+
 function validateForm() {
     // ラジオボタンの要素を取得する
     let questiontype = getParam('type');
@@ -156,9 +173,8 @@ function validateForm() {
         return false;
     }
 
-    // 別の関数を実行する
+    // 送信を許可した場合はsubmitForm()を呼び出す
     submitForm();
-
     return true;
 }
 
