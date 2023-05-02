@@ -40,7 +40,6 @@ function showQuestion() {
         for (i = 1; i < 5; i++) {
             // 正解の選択肢(value=TRUE)
             if (questionlist[h]['正答'] == questionlist[h]['選択肢' + Number(i)]) {
-                console.log(questionlist[h]['選択肢' + Number(i)]);
                 answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="true">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
             }
             // 不正解の選択肢(value=FALSE)
@@ -62,17 +61,14 @@ async function getUsers() {
     const response = await fetch("https://script.google.com/macros/s/AKfycbygMkwZCa-6mJ7uU5AROMwA-SZ_Px5jqRyOqDehW0a3qeqNdEsseADX9FY7tTihue0d/exec");
     const users = await response.json();
     userArray = users;
-    console.log(userArray);
 }
-
 getUsers();
-console.log(userArray);
 
 //選択された回答を送信する関数
 function submitForm() {
     getUsers();
     let userId = getParam('ID');
-    console.log(userArray);
+
     // ロード画面を表示する要素のIDを取得
     const loader = document.getElementById('loader');
     // ロード画面を表示
@@ -83,76 +79,71 @@ function submitForm() {
 
     let questiontype = getParam('type');
     let questionlist = jsonArray[questiontype];
-    console.log(questionlist);
-
 
     //ループ間の待機時間を0.8秒に設定
-    let delay = 800;
+    let delay = 1000;
 
     let promise = Promise.resolve();
     questionlist.forEach((question, h) => {
         promise = promise.then(() => {
             return new Promise((resolve) => {
-                console.log(userArray);
+
                 let form = document.getElementById("form-" + question['ID']);
                 let formData = new FormData(form);
-                console.log(questionlist[h]['ID']);
 
-                // シート名を formData に追加
-                formData.append("sheetName", sheetName);
+                userArray[0] = userArray[0].filter(user => user.ID === userId);
 
-                //formDataの追加
-                formData.append("ID", questionlist[h]['ID']);
-                formData.append("category", questionlist[h]['category']);
-                formData.append("type", questionlist[h]['type']);
-                formData.append("level", questionlist[h]['level']);
-                console.log(userArray);
+                if (userArray[0].length > 0) {
+                    // シート名を formData に追加
+                    formData.append("sheetName", sheetName);
 
-                for (u = 0; u < userArray.length; u++) {
-                    for (v = 0; v < userArray[u].length; v++) {
-                        if (userArray[u][v]['ID'] == userId) {
-                            formData.append("user", userArray[u][v]['ID']);
-                            formData.append("学部", userArray[u][v]['学部']);
-                            formData.append("学年", userArray[u][v]['学年']);
-                            formData.append("授業年度", userArray[u][v]['授業年度']);
-                            formData.append("class", userArray[u][v]['class']);
-                            let radios = form.querySelectorAll('input[type=radio]:checked');
+                    //formDataの追加
+                    formData.append("ID", questionlist[h]['ID']);
+                    console.log(questionlist[h]['ID'])
+                    formData.append("category", questionlist[h]['category']);
+                    formData.append("type", questionlist[h]['type']);
+                    formData.append("level", questionlist[h]['level']);
 
-                            if (radios.length > 0) {
-                                radios.forEach((radio) => {
-                                    formData.append(radio.name, radio.value);
-                                    formData.append("結果", radio.value);
-                                    formData.append("status", "回答");
-                                    formData.append("selected", radio.labels[0].textContent);
-                                });
-                            } else {
-                                //未選択の場合、結果をFALSE,statusを未回答に設定
-                                let radio = form.querySelector('input[type=radio]');
-                                formData.append(radio.name, radio.value);
-                                formData.append("結果", "FALSE");
-                                formData.append("status", "未回答");
-                                formData.append("selected", "");
-                            }
-                            console.log(formData);
+                    formData.append("user", userArray[0][0]['ID']);
+                    formData.append("学部", userArray[0][0]['学部']);
+                    formData.append("学年", userArray[0][0]['学年']);
+                    formData.append("授業年度", userArray[0][0]['授業年度']);
+                    formData.append("class", userArray[0][0]['class']);
+                    let radios = form.querySelectorAll('input[type=radio]:checked');
 
-                            let xhr = new XMLHttpRequest();
-                            xhr.open("POST", "https://script.google.com/macros/s/AKfycbxQ0tnDA6q9SrXHDdgqHlzJUTPy5Cgbs4kKr68vH1e3O_Eb0v7W_sSfW9nLIMONf_cz/exec");
-                            xhr.send(formData);
-                            console.log('done');
-                            history.pushState(null, null, currentUrl);
-                            setTimeout(() => {
-                                resolve();
-                            }, delay);
-                        } else {
-                            alert("登録外のユーザーです");
-                            // ロード画面を非表示にする
-                            loader.style.display = 'none';
-                            window.location.href = '../select.html';
-                            break
-                        }
+                    if (radios.length > 0) {
+                        radios.forEach((radio) => {
+                            formData.append(radio.name, radio.value);
+                            formData.append("結果", radio.value);
+                            formData.append("status", "回答");
+                            formData.append("selected", radio.labels[0].textContent);
+                        });
+                    } else {
+                        //未選択の場合、結果をFALSE,statusを未回答に設定
+                        let radio = form.querySelector('input[type=radio]');
+                        formData.append(radio.name, radio.value);
+                        formData.append("結果", "FALSE");
+                        formData.append("status", "未回答");
+                        formData.append("selected", "");
                     }
-                }
 
+
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "https://script.google.com/macros/s/AKfycbxQ0tnDA6q9SrXHDdgqHlzJUTPy5Cgbs4kKr68vH1e3O_Eb0v7W_sSfW9nLIMONf_cz/exec");
+                    xhr.send(formData);
+                    console.log('done');
+                    history.pushState(null, null, currentUrl);
+                    setTimeout(() => {
+                        resolve();
+                    }, delay);
+                } else {
+                    // ロード画面を非表示にする
+                    loader.style.display = 'none';
+                    // アラートを出す
+                    alert("登録されてないユーザーです");
+                    window.location.href = '../select.html';
+                    return;
+                }
 
             });
         });
