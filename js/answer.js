@@ -4,7 +4,7 @@ console.log(currentUrl);
 if (getParam('type') == null || getParam('type') == "") {
     window.location.href = '../select.html';
 }
-let url = "https://script.google.com/macros/s/AKfycbw3nGs_X5Zvuy1voLOXy-q8c-B_1LV84WKhZFcokqof_PHtQDnzfAbYybmLnqQJlPVC/exec";
+let url = "https://script.google.com/macros/s/AKfycbxuVLHrK-UzIzIk3cXItB3TYICWcibXNzbLmR63smy0H3CbjHC9b7birLx2QZZN7q7r/exec";
 
 fetch(url)
     .then(response => response.json())
