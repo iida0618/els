@@ -1,7 +1,7 @@
 let jsonArray;
 const currentUrl = location.href;
 console.log(currentUrl);
-if (getParam('type') == null || getParam('type') == "") {
+if (getParam('type') == null || getParam('type') == "" || getParam('ID') == null || getParam('ID') == "") {
     window.location.href = '../select.html';
 }
 let url = "https://script.google.com/macros/s/AKfycbxuVLHrK-UzIzIk3cXItB3TYICWcibXNzbLmR63smy0H3CbjHC9b7birLx2QZZN7q7r/exec";
@@ -116,37 +116,44 @@ function submitForm() {
                             formData.append("学年", userArray[u][v]['学年']);
                             formData.append("授業年度", userArray[u][v]['授業年度']);
                             formData.append("class", userArray[u][v]['class']);
+                            let radios = form.querySelectorAll('input[type=radio]:checked');
+
+                            if (radios.length > 0) {
+                                radios.forEach((radio) => {
+                                    formData.append(radio.name, radio.value);
+                                    formData.append("結果", radio.value);
+                                    formData.append("status", "回答");
+                                    formData.append("selected", radio.labels[0].textContent);
+                                });
+                            } else {
+                                //未選択の場合、結果をFALSE,statusを未回答に設定
+                                let radio = form.querySelector('input[type=radio]');
+                                formData.append(radio.name, radio.value);
+                                formData.append("結果", "FALSE");
+                                formData.append("status", "未回答");
+                                formData.append("selected", "");
+                            }
+                            console.log(formData);
+
+                            let xhr = new XMLHttpRequest();
+                            xhr.open("POST", "https://script.google.com/macros/s/AKfycbxQ0tnDA6q9SrXHDdgqHlzJUTPy5Cgbs4kKr68vH1e3O_Eb0v7W_sSfW9nLIMONf_cz/exec");
+                            xhr.send(formData);
+                            console.log('done');
+                            history.pushState(null, null, currentUrl);
+                            setTimeout(() => {
+                                resolve();
+                            }, delay);
+                        } else {
+                            alert("登録外のユーザーです");
+                            // ロード画面を非表示にする
+                            loader.style.display = 'none';
+                            window.location.href = '../select.html';
+                            break
                         }
                     }
                 }
 
-                let radios = form.querySelectorAll('input[type=radio]:checked');
 
-                if (radios.length > 0) {
-                    radios.forEach((radio) => {
-                        formData.append(radio.name, radio.value);
-                        formData.append("結果", radio.value);
-                        formData.append("status", "回答");
-                        formData.append("selected", radio.labels[0].textContent);
-                    });
-                } else {
-                    //未選択の場合、結果をFALSE,statusを未回答に設定
-                    let radio = form.querySelector('input[type=radio]');
-                    formData.append(radio.name, radio.value);
-                    formData.append("結果", "FALSE");
-                    formData.append("status", "未回答");
-                    formData.append("selected", "");
-                }
-                console.log(formData);
-
-                let xhr = new XMLHttpRequest();
-                xhr.open("POST", "https://script.google.com/macros/s/AKfycbxQ0tnDA6q9SrXHDdgqHlzJUTPy5Cgbs4kKr68vH1e3O_Eb0v7W_sSfW9nLIMONf_cz/exec");
-                xhr.send(formData);
-                console.log('done');
-                history.pushState(null, null, currentUrl);
-                setTimeout(() => {
-                    resolve();
-                }, delay);
             });
         });
     });
