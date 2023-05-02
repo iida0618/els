@@ -59,6 +59,12 @@ label {
     background-color: lightcyan;
     word-break: break-all;
     border-radius: 10px;
+    transition: .25s ease-in-out;
+}
+
+.answerform:hover {
+    scale: 1.06;
+    transition: .25s ease-in-out;
 }
 
 .answerform.selected {
