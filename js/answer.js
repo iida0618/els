@@ -15,6 +15,7 @@ fetch(url)
         showQuestion();
     });
 
+//問題を表示する関数
 function showQuestion() {
     let questiontype = getParam('type');
     console.table(jsonArray[questiontype]);
@@ -37,14 +38,14 @@ function showQuestion() {
     let answer = '';
     for (h = 0; h < questionlist.length; h++) {
         for (i = 1; i < 5; i++) {
-            // 正解の選択肢
+            // 正解の選択肢(value=TRUE)
             if (questionlist[h]['正答'] == questionlist[h]['選択肢' + Number(i)]) {
                 console.log(questionlist[h]['選択肢' + Number(i)]);
-                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="TRUE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
+                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="true">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
             }
-            // 不正解の選択肢
+            // 不正解の選択肢(value=FALSE)
             else {
-                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="FALSE">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
+                answer += '<div class="answerform"><label for="answer' + questionlist[h]['ID'] + '-' + Number(i) + '"><input type="radio" id="answer' + questionlist[h]['ID'] + '-' + Number(i) + '" name="answer' + questionlist[h]['ID'] + '" value="false">' + questionlist[h]['選択肢' + Number(i)] + '</label></div>'
             }
         }
         document.getElementById('form-' + questionlist[h]['ID']).innerHTML = answer;
@@ -54,22 +55,23 @@ function showQuestion() {
 
 var questionarea = $(".questionarea").length;
 
-
-
-
+//選択された回答を送信する関数
 function submitForm() {
     // ロード画面を表示する要素のIDを取得
     const loader = document.getElementById('loader');
     // ロード画面を表示
     loader.style.display = 'block';
 
-    let sheetName = getParam('type'); // シート名を変数に格納
+    // シート名を変数に格納
+    let sheetName = getParam('type');
 
     let questiontype = getParam('type');
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
+    //ループ間の待機時間を0.8秒に設定
     let delay = 800;
+
     let promise = Promise.resolve();
     questionlist.forEach((question, h) => {
         promise = promise.then(() => {
@@ -78,8 +80,8 @@ function submitForm() {
                 let formData = new FormData(form);
                 console.log(questionlist[h]['ID']);
 
-                 // シート名を formData に追加
-                 formData.append("sheetName", sheetName);
+                // シート名を formData に追加
+                formData.append("sheetName", sheetName);
 
                 //formDataの追加
                 formData.append("ID", questionlist[h]['ID']);
@@ -97,6 +99,7 @@ function submitForm() {
                         formData.append("selected", radio.labels[0].textContent);
                     });
                 } else {
+                    //未選択の場合、結果をFALSE,statusを未回答に設定
                     let radio = form.querySelector('input[type=radio]');
                     formData.append(radio.name, radio.value);
                     formData.append("結果", "FALSE");
@@ -106,7 +109,7 @@ function submitForm() {
                 console.log(formData);
 
                 let xhr = new XMLHttpRequest();
-                xhr.open("POST", "https://script.google.com/macros/s/AKfycbyH8V6sEdT4h7uugumbd8fztsRPio_JJ2m5ecI4_4PxkEh6q7-NzPylO1vTapOssFLE/exec");
+                xhr.open("POST", "https://script.google.com/macros/s/AKfycbxQ0tnDA6q9SrXHDdgqHlzJUTPy5Cgbs4kKr68vH1e3O_Eb0v7W_sSfW9nLIMONf_cz/exec");
                 xhr.send(formData);
                 console.log('done');
                 history.pushState(null, null, currentUrl);
@@ -122,6 +125,7 @@ function submitForm() {
         loader.style.display = 'none';
         // アラートを出す
         alert("回答の送信が完了しました！");
+        $('.answerform').removeClass('selected');
         // 全てのラジオボタンの選択を解除
         var radios = document.getElementsByTagName('input');
         for (var i = 0; i < radios.length; i++) {
@@ -132,12 +136,7 @@ function submitForm() {
     });
 }
 
-
-
-
-
-
-
+//送信前にポップアップを表示する関数
 function validateForm() {
     // ラジオボタンの要素を取得する
     let questiontype = getParam('type');
@@ -186,10 +185,13 @@ function validateForm() {
     return true;
 }
 
-
-
-
-
+$(function () {
+    //ページャーをクリックしたときの動作
+    $(document).on('click', '.answerform', (function () {
+        $(this).siblings().removeClass('selected');
+        $(this).addClass('selected');
+    }));
+})
 
 //クエリの取得
 /**
