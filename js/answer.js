@@ -63,6 +63,8 @@ function submitForm() {
     // ロード画面を表示
     loader.style.display = 'block';
 
+    let sheetName = getParam('type'); // シート名を変数に格納
+
     let questiontype = getParam('type');
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
@@ -75,6 +77,9 @@ function submitForm() {
                 let form = document.getElementById("form-" + question['ID']);
                 let formData = new FormData(form);
                 console.log(questionlist[h]['ID']);
+
+                 // シート名を formData に追加
+                 formData.append("sheetName", sheetName);
 
                 //formDataの追加
                 formData.append("ID", questionlist[h]['ID']);
@@ -101,7 +106,7 @@ function submitForm() {
                 console.log(formData);
 
                 let xhr = new XMLHttpRequest();
-                xhr.open("POST", "https://script.google.com/macros/s/AKfycbwLinwxXSe47kfLP35BFq4oSPlnXUyrIw7PM4K5c-nJxacP2NMTTt526aKZw7oTY4d1/exec");
+                xhr.open("POST", "https://script.google.com/macros/s/AKfycbyH8V6sEdT4h7uugumbd8fztsRPio_JJ2m5ecI4_4PxkEh6q7-NzPylO1vTapOssFLE/exec");
                 xhr.send(formData);
                 console.log('done');
                 history.pushState(null, null, currentUrl);
@@ -124,8 +129,6 @@ function submitForm() {
                 radios[i].checked = false;
             }
         }
-        // window.location.href = '../select.html';
-        window.location.href = 'https://www.amazon.co.jp/';
     });
 }
 
