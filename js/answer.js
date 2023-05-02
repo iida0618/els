@@ -55,8 +55,24 @@ function showQuestion() {
 
 var questionarea = $(".questionarea").length;
 
+
+let userArray;
+
+async function getUsers() {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbygMkwZCa-6mJ7uU5AROMwA-SZ_Px5jqRyOqDehW0a3qeqNdEsseADX9FY7tTihue0d/exec");
+    const users = await response.json();
+    userArray = users;
+    console.log(userArray);
+}
+
+getUsers();
+console.log(userArray);
+
 //選択された回答を送信する関数
 function submitForm() {
+    getUsers();
+    let userId = getParam('ID');
+    console.log(userArray);
     // ロード画面を表示する要素のIDを取得
     const loader = document.getElementById('loader');
     // ロード画面を表示
@@ -69,6 +85,7 @@ function submitForm() {
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
+
     //ループ間の待機時間を0.8秒に設定
     let delay = 800;
 
@@ -76,6 +93,7 @@ function submitForm() {
     questionlist.forEach((question, h) => {
         promise = promise.then(() => {
             return new Promise((resolve) => {
+                console.log(userArray);
                 let form = document.getElementById("form-" + question['ID']);
                 let formData = new FormData(form);
                 console.log(questionlist[h]['ID']);
@@ -88,6 +106,19 @@ function submitForm() {
                 formData.append("category", questionlist[h]['category']);
                 formData.append("type", questionlist[h]['type']);
                 formData.append("level", questionlist[h]['level']);
+                console.log(userArray);
+
+                for (u = 0; u < userArray.length; u++) {
+                    for (v = 0; v < userArray[u].length; v++) {
+                        if (userArray[u][v]['ID'] == userId) {
+                            formData.append("user", userArray[u][v]['ID']);
+                            formData.append("学部", userArray[u][v]['学部']);
+                            formData.append("学年", userArray[u][v]['学年']);
+                            formData.append("授業年度", userArray[u][v]['授業年度']);
+                            formData.append("class", userArray[u][v]['class']);
+                        }
+                    }
+                }
 
                 let radios = form.querySelectorAll('input[type=radio]:checked');
 
