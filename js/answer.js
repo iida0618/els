@@ -23,6 +23,8 @@ function showQuestion() {
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
+document.getElementById('question-title').innerHTML = getParam('type')
+
     let questiontitle = '';
     for (h = 0; h < questionlist.length; h++) {
         questiontitle += '<div class="questionarea" id="' + questionlist[h]['ID'] + '"><div class="title" >' + questionlist[h]['ID'] + '：' + questionlist[h]['問題文'] + '</div></div>'
@@ -126,7 +128,6 @@ function submitForm() {
                         formData.append("status", "未回答");
                         formData.append("selected", "");
                     }
-
 
                     let xhr = new XMLHttpRequest();
                     xhr.open("POST", "https://script.google.com/macros/s/AKfycbxQ0tnDA6q9SrXHDdgqHlzJUTPy5Cgbs4kKr68vH1e3O_Eb0v7W_sSfW9nLIMONf_cz/exec");

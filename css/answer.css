@@ -49,6 +49,10 @@ label {
     margin-left: 1vw;
 }
 
+#question-title {
+    text-align: center;
+}
+
 .questionarea {
     background-color: rgb(231, 229, 229);
     margin-bottom: 1vw;
