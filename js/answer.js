@@ -82,7 +82,7 @@ function submitForm() {
     let questiontype = getParam('type');
     let questionlist = jsonArray[questiontype];
 
-    //ループ間の待機時間を0.8秒に設定
+    //ループ間の待機時間を1.0秒に設定
     let delay = 1000;
 
     let promise = Promise.resolve();
