@@ -23,6 +23,9 @@ function showQuestion() {
     let questionlist = jsonArray[questiontype];
     console.log(questionlist);
 
+    questionlist = questionlist.filter(questionlist =>questionlist.ID !== '');
+    console.log(questionlist);
+
 document.getElementById('question-title').innerHTML = getParam('type')
 
     let questiontitle = '';
